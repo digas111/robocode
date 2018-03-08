@@ -31,6 +31,7 @@ public class billbot extends AdvancedRobot{
 	 */
 		
 	Target dust = new Target(this);
+	Fire kill = new Fire(this, dust);;
 	
 
 	
@@ -84,11 +85,17 @@ public class billbot extends AdvancedRobot{
 	    setTurnRadarRightRadians(Utils.normalRelativeAngle(radarTurn));
 	    
 	    dust.update(e);
+	    kill.getFireInfo();
+	    
+	    fire_power = kill.firePower;
+	    bullet_velocity = kill.bulletVelocity;
+	    
+	    
 	    out.println(dust.position.toString());
 	    
 	    
 	    
-	    double gunTurn = getFireAngle(dust.getFuturePosition(getTimeToEnemy())) - getGunHeadingRadians();
+	    double gunTurn = kill.fireAngle - getGunHeadingRadians();
 	    
 	    turnGunRightRadians(Utils.normalRelativeAngle(gunTurn));
 	        
@@ -117,31 +124,7 @@ public class billbot extends AdvancedRobot{
 	}
 	
 	
-	public double getFireAngle(Coordinates enemy) {
-		
-		//If the enemy is above or beneath me we know the angle by comparing only the y positions
-		
-		double xSide = enemy.x - getX();
-		double ySide = enemy.y - getY();
-		double xSideAbs = Math.abs(xSide);
-		double ySideAbs = Math.abs(ySide);
-		double distRobotToRobot = Math.sqrt(xSideAbs*xSideAbs + ySideAbs*ySideAbs);
-		
-		double angle = Math.asin(xSide/distRobotToRobot);
-		
-		if (xSide>0 && ySide>0) { //if enemy is in the lower left compared to billbot
-			return angle;
-		}
-		else if (xSide < 0 && ySide > 0) {
-			return angle + 2*Math.PI;
-		}
-		else if (xSide > 0 && ySide < 0) {
-			return Math.PI - angle;
-		}
-		
-		return Math.PI - angle;
-		
-	}
+
 	
 	public double getTimeToEnemy() {
 		return dust.distance / bullet_velocity;

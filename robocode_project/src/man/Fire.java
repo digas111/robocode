@@ -9,7 +9,12 @@ public class Fire extends AdvancedRobot{
 	
 	double timeToEnemy;
 	double halfInterval;
+	double firePower;
+	double bulletVelocity;
+	double fireAngle;
+	double hitTime;
 	
+	boolean possible;
 
 	public Fire(billbot myRobot, Target enemyRobot) {
 		super();
@@ -19,22 +24,36 @@ public class Fire extends AdvancedRobot{
 		this.enemyRobot = enemyRobot;
 		this.timeToEnemy = enemyRobot.distance * myRobot.bullet_velocity;
 		this.halfInterval = timeToEnemy/2;
+		getFireInfo();
 	}
 	
-	double getFireInfo() {
+	void getFireInfo() {
 		
-		double timeToImpact = runTimeInterval();
+		Coordinates hitPoint = testPoints();
 		
-		//
+		if(hitPoint.x==-1 && hitPoint.y==-1) {
+			possible = false;
+		}
+		else {
+			possible = true;
+			
+			Coordinates hitPosition = enemyRobot.getFuturePosition(hitTime);
+			Coordinates myRobotPosition = new Coordinates(getX(),getY());
+			double shotDistance = new DistancePointToPoint(myRobotPosition, hitPosition).distance;
+			
+			
+			bulletVelocity = shotDistance/hitTime;
+			firePower = (bulletVelocity - 20) /(-3);
+			fireAngle = getFireAngle(hitPosition);
+			
+		}
 		
-		
-		
-		
+
 		
 	}
 	
 	
-	double testPoints() {
+	Coordinates testPoints() {
 		
 		Coordinates test;
 		
@@ -43,12 +62,12 @@ public class Fire extends AdvancedRobot{
 			test = getPoint(i);
 			
 			if(test.x!=-1 && test.y!=-1) {
-				return i;
+				hitTime = i;
+				return test;
 			}
-			
 		}
 		
-		return -1;
+		return new Coordinates(-1,-1);
 		
 	}
 	
@@ -151,6 +170,32 @@ public class Fire extends AdvancedRobot{
 		}
 		
 		
+		
+	}
+	
+	public double getFireAngle(Coordinates enemy) {
+		
+		//If the enemy is above or beneath me we know the angle by comparing only the y positions
+		
+		double xSide = enemy.x - myRobot.getX();
+		double ySide = enemy.y - myRobot.getY();
+		double xSideAbs = Math.abs(xSide);
+		double ySideAbs = Math.abs(ySide);
+		double distRobotToRobot = Math.sqrt(xSideAbs*xSideAbs + ySideAbs*ySideAbs);
+		
+		double angle = Math.asin(xSide/distRobotToRobot);
+		
+		if (xSide>0 && ySide>0) { //if enemy is in the lower left compared to billbot
+			return angle;
+		}
+		else if (xSide < 0 && ySide > 0) {
+			return angle + 2*Math.PI;
+		}
+		else if (xSide > 0 && ySide < 0) {
+			return Math.PI - angle;
+		}
+		
+		return Math.PI - angle;
 		
 	}
 	
