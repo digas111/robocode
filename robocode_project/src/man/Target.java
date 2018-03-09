@@ -6,7 +6,7 @@ import robocode.ScannedRobotEvent;
 public class Target extends AdvancedRobot{
 	
 	AdvancedRobot myRobot;
-	private Vector2 velocity;
+	Vector2 velocity;
 	double distance;
 	private double heading;
 	private double bearing;
@@ -50,16 +50,17 @@ public class Target extends AdvancedRobot{
 		
 	}
 	
-	public Coordinates getFuturePosition(double time) {
-		
-		double x = position.x + (velocity.x * time);
-		double y = position.y + (velocity.y * time);
-		
-//		out.println("time:" + time);
-//		out.println("Future x:" + x);
-//		out.println("Future y:" + y);
-		
-		return new Coordinates(x,y);
-		
-	}
+//	public Coordinates getFuturePosition(double time) {
+//		
+//		double x = position.x + (velocity.x * time);
+//		double y = position.y + (velocity.y * time);
+//		
+////		out.println("time:" + time);
+////		out.println("Future x:" + x);
+////		out.println("Future y:" + y);
+//		
+//		return new Coordinates(x,y);
+//		
+//	}
+	
 }

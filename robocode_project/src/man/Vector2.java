@@ -1,6 +1,6 @@
 package man;
 
-class Vector2{
+class Vector2 {
 	public double x;
 	public double y;
 	

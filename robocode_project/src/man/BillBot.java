@@ -7,7 +7,7 @@ import java.awt.geom.*;
 import java.util.*;
 
 //**
-public class billbot extends AdvancedRobot{
+public class BillBot extends AdvancedRobot{
 	
 	/**
 	 *  ROBOT SETTINGS
@@ -15,9 +15,8 @@ public class billbot extends AdvancedRobot{
 	
 	double fire_power=1;
 	
-	
 	/**
-	 *  
+	 *
 	 */
 	
 	/**
@@ -29,11 +28,11 @@ public class billbot extends AdvancedRobot{
 	/**
 	 *  
 	 */
-		
-	Target dust = new Target(this);
-	Fire kill = new Fire(this, dust);;
-	
+	Target dust;
+	Fire kill;	
 
+	
+	boolean firstRun = true;
 	
 	/**
 	 * run: Theboss's default behavior
@@ -42,6 +41,12 @@ public class billbot extends AdvancedRobot{
 	int j=0;
 	
 	public void run() {
+		if(firstRun) {
+			dust = new Target(this);
+			
+			firstRun = false;
+		}
+		
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
 		setAdjustRadarForRobotTurn(true);
@@ -85,6 +90,9 @@ public class billbot extends AdvancedRobot{
 	    setTurnRadarRightRadians(Utils.normalRelativeAngle(radarTurn));
 	    
 	    dust.update(e);
+	    if(kill==null) {
+	    	kill = new Fire(this, dust);
+	    }
 	    kill.getFireInfo();
 	    
 	    fire_power = kill.firePower;

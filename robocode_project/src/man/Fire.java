@@ -1,10 +1,10 @@
 package man;
 
-import robocode.AdvancedRobot;
+import robocode.*;
 
-public class Fire extends AdvancedRobot{
+public class Fire{
 	
-	billbot myRobot;
+	BillBot myRobot;
 	Target enemyRobot;
 	
 	double timeToEnemy;
@@ -16,8 +16,15 @@ public class Fire extends AdvancedRobot{
 	
 	boolean possible;
 
-	public Fire(billbot myRobot, Target enemyRobot) {
+	public Fire(BillBot myRobot, Target enemyRobot) {
 		super();
+		if(myRobot == null) {
+			//out.println("myRobot null");
+		}
+		if(enemyRobot == null) {
+			//out.println("enemyRobot null");
+		}
+		
 		// TODO Auto-generated constructor stub
 		
 		this.myRobot = myRobot;
@@ -37,27 +44,24 @@ public class Fire extends AdvancedRobot{
 		else {
 			possible = true;
 			
-			Coordinates hitPosition = enemyRobot.getFuturePosition(hitTime);
-			Coordinates myRobotPosition = new Coordinates(getX(),getY());
-			double shotDistance = new DistancePointToPoint(myRobotPosition, hitPosition).distance;
+			//Coordinates hitPosition = nextPlace();
+			//Coordinates hitPosition = new Coordinates(10,10);
+			Coordinates myRobotPosition = new Coordinates(myRobot.getX(),myRobot.getY());
+			double shotDistance = new DistancePointToPoint(myRobotPosition, hitPoint).distance;
 			
 			
 			bulletVelocity = shotDistance/hitTime;
-			firePower = (bulletVelocity - 20) /(-3);
-			fireAngle = getFireAngle(hitPosition);
+			firePower = (bulletVelocity - 20)/(-3);
+			fireAngle = getFireAngle(hitPoint);
 			
 		}
-		
-
-		
 	}
-	
 	
 	Coordinates testPoints() {
 		
 		Coordinates test;
 		
-		for (double i=timeToEnemy - halfInterval; i <= timeToEnemy + halfInterval;i++) {
+		for (double i=timeToEnemy - 10; i <= timeToEnemy + 10;i++) {
 			
 			test = getPoint(i);
 			
@@ -68,10 +72,7 @@ public class Fire extends AdvancedRobot{
 		}
 		
 		return new Coordinates(-1,-1);
-		
 	}
-	
-	
 	
 	Coordinates getPoint(double time) {
 		
@@ -81,7 +82,7 @@ public class Fire extends AdvancedRobot{
 		//so we consider that the enemy maintains its direction and velocity
 		//and get a future point
 		
-		Coordinates future = enemyRobot.getFuturePosition(timeToEnemy);
+		Coordinates future = nextPlace(timeToEnemy);
 		
 		//and the current position
 		
@@ -120,8 +121,6 @@ public class Fire extends AdvancedRobot{
 		
 		double inSqrtValue = radiusElevated2*differenceOverallElevated2 - DElevated2;
 		
-		//
-		
 		double x1, y1, x2, y2;
 		
 		if (inSqrtValue<0) {
@@ -158,7 +157,8 @@ public class Fire extends AdvancedRobot{
 			
 			Coordinates p1 = new Coordinates(x1,y1);
 			Coordinates p2 = new Coordinates(x2,y2);
-			Coordinates pMyRobot = new Coordinates(getX(),getY());
+			
+			Coordinates pMyRobot = new Coordinates(myRobot.getX(),myRobot.getY());
 			
 			double distance1 = new DistancePointToPoint(p1, pMyRobot).distance;
 			double distance2 = new DistancePointToPoint(p2, pMyRobot).distance;
@@ -168,7 +168,6 @@ public class Fire extends AdvancedRobot{
 			}
 			return p2;
 		}
-		
 		
 		
 	}
@@ -194,18 +193,27 @@ public class Fire extends AdvancedRobot{
 		else if (xSide > 0 && ySide < 0) {
 			return Math.PI - angle;
 		}
-		
 		return Math.PI - angle;
-		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	 
+	Coordinates nextPlace(double time) {
+		
+		myRobot.out.println("px:" + enemyRobot.position.x);
+		myRobot.out.println("py:" + enemyRobot.position.y);
+		myRobot.out.println("vx:" + enemyRobot.velocity.x);
+		myRobot.out.println("vy:" + enemyRobot.velocity.y);
+		myRobot.out.println("time:" + time);
+		myRobot.out.println("-------------------------------");
+		
+		double x = enemyRobot.position.x + (enemyRobot.velocity.x * time);
+		double y = enemyRobot.position.y + (enemyRobot.velocity.y * time);
+		
+		myRobot.out.println("time:" + time);
+		myRobot.out.println("Future x:" + x);
+		myRobot.out.println("Future y:" + y);
+		
+		return new Coordinates(x,y);
+		
+	}
 	
 }
