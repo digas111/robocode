@@ -1,5 +1,8 @@
 package man;
 
+//This class is used so store vectors with two axes
+//ex: velocity
+
 class Vector2 {
 	public double x;
 	public double y;
@@ -11,6 +14,8 @@ class Vector2 {
 		this.y = y;
 	}
 	
+	
+	//If we need to print it
 	@Override
 	public String toString() {
 		return "x="+x+" y="+y;

@@ -1,4 +1,8 @@
 package man;
+
+//This class receives two points and
+//calculates the distance between them
+
 class DistancePointToPoint {
 	
 	Coordinates p1;

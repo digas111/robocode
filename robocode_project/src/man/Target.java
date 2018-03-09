@@ -2,9 +2,12 @@ package man;
 
 import robocode.*;
 import robocode.ScannedRobotEvent;
+import robocode.util.Utils;
 
-public class Target extends AdvancedRobot{
+public class Target{
 	
+	
+	//Variables to store the information about our enemy locally 
 	AdvancedRobot myRobot;
 	Vector2 velocity;
 	double distance;
@@ -12,17 +15,13 @@ public class Target extends AdvancedRobot{
 	private double bearing;
 	Coordinates position;
 	
-	/*private double velocity;
-	private double xVelocity;
-	private double yVelocity;//*/
-	//private Coordinates position;
-	//private Coordinates futurePosition;
-	
 	public Target(AdvancedRobot myRobot) {		
 		super();
 		this.myRobot = myRobot;
 	}
 
+	//Updates the enemy's information 
+	
 	void update(ScannedRobotEvent e) {
 	
 		bearing = e.getBearingRadians();
@@ -31,16 +30,15 @@ public class Target extends AdvancedRobot{
 		double velocity = e.getVelocity();
 		this.position = getPosition();
 		
+		//This stores the velocity divided between the two axes
 		this.velocity = new Vector2(velocity*Math.sin(heading),velocity*Math.cos(heading));
-		
-//		out.println(this.velocity.toString());
-//		out.println("heading" + heading);
 		
 	}
 	
-	//double radarHeading, double billbotX, double billbotY, double distance
+	//Calculates the enemy's current position based on 
+	//its distance from us and the angle between us
 	public Coordinates getPosition() {
-		double radarHeading = Math.abs(myRobot.getHeadingRadians() + bearing);
+		double radarHeading = Utils.normalRelativeAngle(myRobot.getHeadingRadians() + bearing);
 	
 		
 		double x = (Math.sin(radarHeading)*distance) + myRobot.getX();
@@ -50,17 +48,20 @@ public class Target extends AdvancedRobot{
 		
 	}
 	
-//	public Coordinates getFuturePosition(double time) {
-//		
-//		double x = position.x + (velocity.x * time);
-//		double y = position.y + (velocity.y * time);
-//		
-////		out.println("time:" + time);
-////		out.println("Future x:" + x);
-////		out.println("Future y:" + y);
-//		
-//		return new Coordinates(x,y);
-//		
-//	}
+	//Calculates the enemy's future position based on
+	//its current movement and position
+	
+	public Coordinates getFuturePosition(double time) {
+		
+		double x = position.x + (velocity.x * time);
+		double y = position.y + (velocity.y * time);
+		
+		myRobot.out.println("time:" + time);
+		myRobot.out.println("Future x:" + x);
+		myRobot.out.println("Future y:" + y);
+		
+		return new Coordinates(x,y);
+		
+	}
 	
 }
